@@ -1,0 +1,49 @@
+body {
+    /* background-color: rgb(248, 240, 231) !important; */
+    background-color: rgb(237, 224, 208) !important;
+}
+
+.card{
+    background-color: #CA7B80 !important;
+    border-color:#CA7B80 !important;
+    border-radius: 15px;   
+}
+
+.btn-primary{
+    color: white !important;
+    background-color: #93585c !important;
+    border-color: #CA7B80 !important;
+}
+
+.btn-outline-primary{
+    color: #CA7B80 !important;
+    border-color: #CA7B80 !important;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active, .btn-outline-primary.active, .open>.dropdown-toggle.btn-outline-primary {
+    color: white !important;
+    background-color: #93585c !important;
+    border-color: #CA7B80 !important;
+}
+
+.input-group-text{
+    color: white !important;
+    background-color: #93585c !important;
+    border-color: #CA7B80 !important;
+}
+
+.outercoan{
+    background-color: pink;
+    
+}
+
+#cardComments{
+    background-color: rgb(237, 224, 208) !important;
+    border-color:#CA7B80 !important;
+    border-radius: 15px !important;
+}
+
+#whiteCardCommentSection{
+    background-color: rgb(237, 224, 208) !important;
+    border-radius: 15px !important;
+}

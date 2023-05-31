@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.js"></script>
+  <script type="text/javascript" src="js/ajax.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Homepage</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light mt-3 mb-2">
+    <div class="container-fluid">
+      <a class="navbar-brand fs-4 ms-4" href="/">Photo Sharing App</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <!-- <ul class="navbar-nav me-auto">
+          <li class="nav-item active fs-5">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item fs-5">
+            <a class="nav-link" href="#">Gallery</a>
+          </li>
+          <li class="nav-item fs-5">
+            <a class="nav-link" href="#">Profile</a>
+          </li>
+        </ul> -->
+        <div class="d-flex collapse navbar-collapse justify-content-end me-auto">
+          <ul class="navbar-nav mr-auto">
+            <% if (authenticated){ %>
+              <li class="nav-item active">
+                <form action="/logout" method="POST" id="logout"></form>
+                <a onclick="document.getElementById('logout').submit();" class="btn btn-outline-primary mx-2">Log
+                  out</a>
+              </li>
+              <li class="nav-item active">
+                <a href="/uploadImage" class="btn btn-primary ms-2 me-4">Upload an Image</a>
+              </li>
+              <%} else{ %>
+                <li class="nav-item active">
+                  <a href="/login" class="btn btn-primary mx-2">Log in</a>
+                </li>
+                <li class="nav-item active">
+                  <a href="/sign_up" class="btn btn-primary ms-2 me-4">Sign Up</a>
+                </li>
+                <%}%>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  <% for (i=0; i < photos.length; i++){ %>
+
+
+    <div class="container-fluid">
+      <div class="row mx-auto mt-5 justify-content-center align-items-center">
+        <div class="col-md-6">
+          <div class="row mx-auto">
+
+            <!-- <% //if (locals.image) { %> -->
+            <img src="<%= photos[i].image_path %> " alt="<%= photos[i].alt_text %>" />
+            <!-- <% //} %> -->
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-10 mx-auto">
+              <h1>
+                <%= photos[i].image_name %>
+              </h1>
+
+              <h2>@<%= photos[i].user_name %>
+              </h2>
+
+              <% //format time of image in nicer way, aka no seconds and timezone %>
+                <% const date=new Date(photos[i].date_upload); const formattedDate=("0" + date.getDate()).slice(-2)
+                  + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear().toString() + " " + ("0" +
+                  date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2); %>
+                  <p>
+                    <%= formattedDate %>
+                  </p>
+            </div>
+
+            <div class="col-md-2 numberLikes">
+              <!-- like icon with number of likes -->
+              <a style="color: #93585c;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                </svg>
+                <span id="nrLikes">
+                  <%= numberLikes[i] %>
+                </span>
+              </a>
+              <!-- comment icon with number of comments -->
+              <a style="color: #93585c;"> <!-- add href to location of comment section of each photo-->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                  class="bi bi-chat-square-dots" viewBox="0 0 16 16">
+                  <path
+                    d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                  <path
+                    d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg>
+                <span id="nrComments">
+                  <%= numberComments[i] %>
+                </span>
+              </a>
+
+            </div>
+            <!-- </div> -->
+            <p>
+              <%= photos[i].caption %>
+            </p>
+
+            <!-- like button -->
+            <% if (authenticated){ %>
+              <div class="row mw-10">
+                <form action="/like" method="POST" id="like_form">
+                  <input type="hidden" value="<%= photos[i].image_id %>" name="image_id" id="image_id">
+                  <% if(singleLike[i]){%>
+                    <button class="btn btn-outline-primary btn-sm my-3 mw-20 likeButton" name="likedButton"
+                      id="likedButton" type="submit">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-heart-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                      </svg> &nbsp; Liked</button>
+                    <%}else{%>
+                      <button class="btn btn-primary btn-sm my-3 mw-20 likeButton" name="likeButton" id="likeButton"
+                        type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                          class="bi bi-heart" viewBox="0 0 16 16">
+                          <path
+                            d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                        </svg> &nbsp; Like</button>
+                      <%}%>
+
+                </form>
+              </div>
+              <%}%>
+
+                <!-- card for comment section and comment input text -->
+                <div class="card col-lg mx-auto">
+                  <div class="row mt-3">
+
+                    <!-- comment input -->
+                    <% if (authenticated){ %>
+                      <form action="/comment" method="POST" id="comment_section">
+                        <div class="input-group justify-content-center mw-60">
+                          <input type="hidden" value="<%= photos[i].image_id %>" name="image_id" id="image_id">
+                          <span class="input-group-text">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                              class="bi bi-chat-square-dots" viewBox="0 0 16 16">
+                              <path
+                                d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                              <path
+                                d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                            </svg>
+                          </span>
+                          <input type="text" class="form-control" name="comment" id="comment"
+                            placeholder="Write your comment here">
+                          <button type="submit" class="btn btn-primary">Post</button>
+                        </div>
+                      </form>
+                      <%}%>
+
+                  </div>
+                  <!-- card for comment section -->
+                  <div class="card-body my-3 mx-4" id="whiteCardCommentSection">
+                    <% if (comments[i].length===0){ %>
+                      <p class="no_comments">Comment section empty &#58&#40</p>
+                      <% }else{%>
+                        <% comments[i].forEach(comment=> { %>
+                          <p>@<%= comment.user_name %>:
+                              <%= comment.comment_input %>
+                          </p>
+
+                          <% //format time of comment in nicer way, aka no seconds and timezone %>
+                            <% const date=new Date(comment.comment_time); const formattedDate=("0" +
+                              date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" +
+                              date.getFullYear().toString() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" +
+                              date.getMinutes()).slice(-2); %>
+                              <p>
+                                <%= formattedDate %>
+                              </p>
+                              <%}) };%>
+
+                  </div>
+                </div>
+
+          </div>
+
+          <!-- <div class="col-md-1 d-flex align-items-center"> 
+            <a class="img-fluid max-width: 100%" href="...">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+              </svg> 
+            </a>
+          </div>  -->
+
+        </div>
+      </div>
+      <%}%>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+          crossorigin="anonymous"></script>
+</body>
+
+</html>
